@@ -66,6 +66,7 @@ radio.nrf.transmit(channel = 33, data = 0xDEADBEEF) -- Transmits on bluetooth (2
 local data = radio.nrf.recieve(channel = 33) -- Recieves RF data on set channel.
 radio.nrf.set_frequency(frequency = 2400000000) -- Sets frequency for NRF chip.
 radio.nrf.alternate_channels(channels = {33,22,11,6,7}, interval = 0.1) -- Changes channels every interval (seconds).
+radio.nrf.set_channel(channel = 5) -- Changes to set channel.
 ```
 ## IR CONTROLS 📺
 ```lua
