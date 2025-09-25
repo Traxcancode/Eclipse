@@ -24,14 +24,15 @@ while true do
     local target_channel = 0
     local channel_selection = channel_finder["channel_selection"]
     if channel_selection == "random" then
-      target_channel = math.random(1,80)
+      target_channel = math.random(1, 80)
     else
       if iter_channels[channel_index] == nil then
-        channels_index = 0
-        continue
+        channel_index = 0
+      else
+        channel_index = channel_index + 1
+        target_channel = iter_channels[channel_index]
       end
-      channel_index += 1
-      target_channel = iter_channels[channel_index]
     end
     radio.transmit(channel = target_channel, data = 0xDEADBEEF0CCCCCCCCC)
+  end
 end
