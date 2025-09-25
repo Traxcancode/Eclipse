@@ -1,4 +1,8 @@
 # Lua Implementation
+
+### These are for beginners, intermediate developers, or expert developers wanting to debug or learn the Eclipse Lua API.
+### This was created specifically for those familiar with the ROBLOX exploiting scene, ROBLOX developers, or people who have previously used the LUA fork "LUAU"
+
 ## GUI 🗺️
 ```lua
 -- // GUI FUNCTIONS \\ --
@@ -90,12 +94,27 @@ wait(INTERVAL) -- Waits interval amount in seconds
 pairs(TABLE) -- Used to sort through tables until it finds a missing spot (ex: nil)
 ipairs(TABLE) -- Used to sort through tables even if there is a missing spot.
 type(VALUE) -- Says type of VALUE. Ex: "number" "string" or custom.
+tonumber(STRING) -- Converts string to number. Ex: "67"->67
+tostring(NUMBER) -- Converts number to string. Ex: 67->"67"
 
--- [ METATABLES ] --
+-- // MATH LIBRARY \\ --
+local value = math.random(1,5) -- Generates and returns a random number through 1,5 (or first being min, second max)
+local clamp = math.clamp(value, min, max) -- Generates a value between min and max of value. Example : math.clamp(20,10,15) --> 15
+local scale = math.scale(value, min, max) -- Scales a value down. Example : math.scale(150, 0, 200) -- > 0.75
+-- More should be added...
+
+```
+
+## METATABLES AND METAMETHODS 😭
+```lua
+-- // METATABLES \\ --
+
+-- Note : Sorry if there messy it's kind of hard to organize all of these inside of one section.
+
 local Table = {}
 local methods = {}
 
--- Metamethods are "__add", "__sub", "__namecall", "__index", "__newindex", "__div", "type", and "__iter"
+-- Metamethods are "__add", "__sub", "__index", "__newindex", "__div", "__mul", "__type", "__tostring", "__tonumber", and "__iter"
 -- These can be used to create custom classes for ease of use.
 
 -- ( INITIALIZING METATABLE ) --
@@ -133,14 +152,128 @@ methods.__sub = function(...) -- Used for subtracting. Takes in as many numbers 
   return output
 end
 
--- (__NAMECALL) --
+-- (__INDEX) --
 
-methods.__namecall = function(
-  
+local cache_table = {
+  ["user_1"] = 777,
+  ["mason"] = 67
+}
 
--- // MATH LIBRARY \\ --
-local value = math.random(1,5) -- Generates and returns a random number through 1,5 (or first being min, second max)
+methods.__index = function(idx) -- This only has one argument. This also has a unconventional use case unlike the previous ones.
+  print(idx) -- This can be called by doing metatable["VALUE"] or metatable.VALUE.
+  if not cache_table[idx] then -- Value doesn't exist in cache table
+    return 0
+  end
+  return cache_table[idx] 
+end
 
+-- (__NEWINDEX) --
+
+-- This one is very similar, but not. I will be using the cache_table from the previous example. 
+
+methods.__newindex = function(idx, value) -- This uses a mix of both. metatable["VALUE"] = value, or metatable.value = value.
+  if not cache_table[idx] then
+    debug.output(data = "Cannot write to nonexistant index "..idx, method = "error")
+    return 0
+  end
+
+  -- just a quick example --
+
+  if idx:lower() == "mason" and value == 67 then
+    debug.output(data = "but it refused...", method = "error")
+    return 0
+  end
+
+  cache_table[idx] = value -- Sets it to the second argument passed.
+end
+
+-- (__DIV) --
+
+-- This one is back to the first two I showed. Except for division.
+
+methods.__div = function(...)
+  local arguments = {...}
+  local output = 0
+  local has_passed = false -- <-- Very important value here!!!
+  for _, value in pairs(arguments) do
+    if has_passed == false then -- To remember what the last number is. The traditional loop we've previously done won't work here... :(
+        has_passed = true
+        output = value
+        continue -- Do no math.. yet?
+    end
+    output /= value
+  end
+end
+
+-- You can activate these like the rest, Example : class / class2 (~0.666667) 
+
+-- (__MUL) --
+
+-- This will follow same as __div (divison metamethod) but different symbol.
+
+methods.__mul = function(...)
+  local arguments = {...}
+  local output = 0
+  local has_passed = false
+
+  for _, value in pairs(arguments) do
+    if has_passed == false then
+      has_passed = true
+      output = value
+      continue -- Again, no math... yet?
+    end
+    output /= value
+  end
+  return output
+end
+
+-- Calling method is same as __div.
+
+-- (__TYPE) --
+
+-- I believe this is a custom one added by me, although ive heard it floating around...?
+
+methods.__type = function() -- No arguments.
+  return "class_type"
+end
+
+-- This gets fired when calling type(metatable). This is heavily useful for class development.
+
+-- (__TOSTRING) --
+
+-- This is relatively similar to type, exccept the caller is 'tostring'.
+
+methods.__tostring = function()
+  -- You can do actual logic here but i'm writing these by hand.
+  return "mason67" 
+end
+
+-- (__TONUMBER) --
+
+-- This is exactly the same as '__tostring' but instead its 'tonumber'.
+
+methods.__tonumber = function()
+  return 67 -- Again, you can do real logic here but i'm not using ChatGPT for these.
+end
+
+-- You can call it by doing tonumber(metatable)
+
+-- (__ITER) --
+
+-- This metamethod is very 'special', but is necessary for classes. Return type MUST be a table.
+
+methods.__iter = function()
+  return {"mason", 67} -- To state again, you can add logic here... but im a lazy bones!! haha!!! :-)
+end
+
+--[[
+To call it you can do
+
+for _, value in pairs(metatable)
+    -- returns your methods.__iter callback value
+end
+]]
+-- This out of all my docs has taken the longest!
 ```
 
 ## DEBUGGING ⚠️
