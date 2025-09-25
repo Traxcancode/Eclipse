@@ -97,6 +97,7 @@ ipairs(TABLE) -- Used to sort through tables even if there is a missing spot.
 type(VALUE) -- Says type of VALUE. Ex: "number" "string" or custom.
 tonumber(STRING) -- Converts string to number. Ex: "67"->67
 tostring(NUMBER) -- Converts number to string. Ex: 67->"67"
+print(TEXT) -- Displays in Menu->Debug->Output
 
 -- // MATH LIBRARY \\ --
 
