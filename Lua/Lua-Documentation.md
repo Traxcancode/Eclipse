@@ -90,6 +90,7 @@ local data = decrypt(data = 0xCCCCCC, method = "hex") -- Converts it to string. 
 local data = encrypt(data = "peepee", method = "hex") -- Returns the data but as a hex number or base64. Methods are also strictly "hex", "base64"
 
 -- [ FUNCTIONS ] --
+
 wait(INTERVAL) -- Waits interval amount in seconds
 pairs(TABLE) -- Used to sort through tables until it finds a missing spot (ex: nil)
 ipairs(TABLE) -- Used to sort through tables even if there is a missing spot.
@@ -98,9 +99,11 @@ tonumber(STRING) -- Converts string to number. Ex: "67"->67
 tostring(NUMBER) -- Converts number to string. Ex: 67->"67"
 
 -- // MATH LIBRARY \\ --
+
 local value = math.random(1,5) -- Generates and returns a random number through 1,5 (or first being min, second max)
 local clamp = math.clamp(value, min, max) -- Generates a value between min and max of value. Example : math.clamp(20,10,15) --> 15
 local scale = math.scale(value, min, max) -- Scales a value down. Example : math.scale(150, 0, 200) -- > 0.75
+
 -- More should be added...
 
 ```
